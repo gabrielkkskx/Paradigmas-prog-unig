@@ -42,4 +42,20 @@ Route::put('/users/{id}', function(){
         'email' => ['sometimes', 'email'],
         'password' => ['sometimes', 'min:4', 'max:20']
     ]);
+
+    $user = User::find($id);
+
+    $user->update($data);
+
+    return response()->json(['data' => $user]);
+});
+
+Route::delete('/users/{id}', function(){
+    $id FacadesRequest::route('id');
+
+    $user = User::find($id);
+
+    $user->delete();
+
+    return response('Usuário deletado com sucesso!');
 });
