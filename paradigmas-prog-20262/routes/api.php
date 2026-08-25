@@ -1,9 +1,9 @@
 <?php
 
 use App\Models\User;
-use Iluminate\Http\Request;
-use Iluminate\Support\Facades\Request as FacadesRequest;
-use Iluminate\Support\Facades\Route;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Request as FacadesRequest;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/health', function(){
     return response()->json('Minha API tá on');
@@ -16,11 +16,28 @@ Route::post('/users', function(){
         'password' => 'required|min:4|max:20',
     ]);
 
-    User::create([
+    $user = User::create([
         'name' => $data['name'],
         'email' => $data['email'],
         'password' => $data['password'],
     ]);
 
-    return response()->json('Usuario criado com sucesso!');
+    return response()->json([
+        'message' => 'Usuário criado com sucesso',
+        'data' => $user
+    ]);
+});
+
+Route::get('/users', function(){
+    $users = User::all();
+
+    return response()->json(['data' => $users]);
+});
+
+Route::put('/users/{id}', function(){
+    $id = FacadesRequest::route('id');
+
+    $data = FacadesRequest::validate([
+        'name' => ['sometimes', 'string', 'max:100', 'min:3'],
+    ]);
 });
