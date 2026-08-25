@@ -39,5 +39,7 @@ Route::put('/users/{id}', function(){
 
     $data = FacadesRequest::validate([
         'name' => ['sometimes', 'string', 'max:100', 'min:3'],
+        'email' => ['sometimes', 'email'],
+        'password' => ['sometimes', 'min:4', 'max:20']
     ]);
 });
