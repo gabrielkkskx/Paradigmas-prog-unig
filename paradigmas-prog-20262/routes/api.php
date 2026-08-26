@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Request as FacadesRequest;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/health', function(){
-    return response()->json('Minha API tá on');
+    return response()->json('Aplicação rodando normalmente');
 });
 
 /* Isso

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CreateUserRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -11,8 +12,22 @@ class UserController extends Controller{
     /**
      * Display a listing of the resource.
      */
-    public function index(){
-        $users = User::all();
+    public function index(Request $request){
+        $data = $request->all();
+
+        /* $users = User::query()
+        ->where('name', $data['name'])
+        ->get(); */
+
+        $users = User::query()->where(function ($query) use ($data) {
+            if (data_get($data['name'])) {
+                $query->where('name', 'like', '%' . $data['name'] . '%');
+            }
+
+            if (data_get($data['email'])) {
+                $query->where('email', 'like', '%' . $data['email'] . '%');
+            }
+        })->get();
 
         return response()->json(['data' => $users]);
     }
@@ -20,12 +35,8 @@ class UserController extends Controller{
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request){
-        $data = $request->validate([
-            'name' => ['required', 'string', 'max:100', 'min:3'],
-            'email' => ['required', 'email'],
-            'password' => ['required', 'min:4', 'max:20']
-        ]);
+    public function store(CreateUserRequest $request){
+        $data = $request->validated();
 
         $user = User::create([
             'name' => $data['name'],
