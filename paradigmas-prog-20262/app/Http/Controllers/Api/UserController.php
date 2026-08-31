@@ -8,45 +8,26 @@ use App\Models\User;
 use Illuminate\Http\Request;
 
 class UserController extends Controller{
+
+    public function __construct(public UserService $userService){}
      
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request){
-        $data = $request->all();
-
-        /* $users = User::query()
-        ->where('name', $data['name'])
-        ->get(); */
-
-        $users = User::query()->where(function ($query) use ($data) {
-            if (data_get($data['name'])) {
-                $query->where('name', 'like', '%' . $data['name'] . '%');
-            }
-
-            if (data_get($data['email'])) {
-                $query->where('email', 'like', '%' . $data['email'] . '%');
-            }
-        })->get();
-
-        return response()->json(['data' => $users]);
+        // Chama a função index do UserService, passando os dados da requisição como parâmetro
+        return response()->json([
+            'data' => $this->userService->index($request->all())
+        ]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
     public function store(CreateUserRequest $request){
-        $data = $request->validated();
-
-        $user = User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => $data['password']
-        ]);
-
+        // Chama a função store do UserService, passando os dados da requisição como parâmetro
         return response()->json([
-            'message' => 'Usuário criado com sucesso',
-            'data' => $user
+            'data' => $this->userService->store($request->all())
         ]);
     }
 
